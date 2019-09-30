@@ -33,6 +33,7 @@ int main(int argc, char **argv){
       }
       while(getline(dim, currentLine)){
         numLines++;
+        cout << (currentLine.length() - 1) << endl;
         if((currentLine.length() - 1) != x){
           cout << "one of your lines is not as long as you said it was..." << endl;
           cout << "fix your file then try again lol" << endl;

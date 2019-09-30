@@ -52,7 +52,7 @@ Grid::~Grid(){
   delete scanGrid;
 }
 
-void Grid::scan(int mode){
+void Grid::scan(int mode, string fileName){
   int count;
   int same = 0;
   for(int i = 0; i < x_length; ++i){
@@ -138,6 +138,9 @@ void Grid::scan(int mode){
   }
   if(same == 0){
     cout << "Grid has stabilized." << endl;
+    if(fileName != "blank"){
+      printGrid(fileName);
+    }
     exit(0);
   }
   copyTo();
@@ -175,6 +178,33 @@ void Grid::output(){
     cout << endl;
   }
   cout << endl;
+}
+
+void Grid::printGrid(string fileName){
+  ofstream file;
+  file.open(fileName);
+
+  for(int i = x_length - 1; i >= 0; --i){
+    //test
+    file << i << " ";
+    if(i < 10){
+      file << " ";
+    }
+    //test
+
+    for(int j = 0; j <= y_length - 1; ++j){
+      if(mainGrid[i][j]){
+        file << "X";
+      }
+      else{
+        file << "-";
+      }
+      file << "  ";
+    }
+    file << endl;
+  }
+  file << endl;
+  file.close();
 }
 
 void Grid::edit(){
@@ -309,6 +339,8 @@ void Grid::checkFile(string file){
 }
 
 void Grid::play(bool check, string file, double prob){
+  bool pause, print;
+  string name = "blank";
   char c;
   int x,y;
   if(check){
@@ -339,14 +371,32 @@ void Grid::play(bool check, string file, double prob){
       }
     }
   }
+  cout << "Would you like to hit a key to go through each cycle manually? (y)" << endl;
+  cout << "Otherwise the simulation will automatically run until grid stabilizes or infinitely." <<  endl;
+  cin >> c;
+  pause = (c == 'y');
+  cout << "If and when grid stabilizes, print grid onto output file? (y)" << endl;
+  cin >> c;
+  print = (c == 'y');
+  if(print){
+
+
+    cout << "Please give name of output file" << endl;
+    cin >> name;
+
+  }
+
 
   cout << "Simulation commencing.\nHit any key except q to continue through." << endl;
   cout << "Hit q at any time to end the simulation." << endl;
   while(c != 'q'){ //game loop temp
-    scan(mode);
+    scan(mode, name);
     output();
     //sleep(10); for later
-    cin >> c; //put conditional here later
+    if(pause){
+      cin >> c; //put conditional here later
+
+    }
   }
 }
 

@@ -8,7 +8,7 @@ class Grid{
     Grid(int horz, int vert); //overloaded constructor
     ~Grid(); //deconstructor
 
-    void scan(int mode);
+    void scan(int mode, string fileName);
     void output();
     void play(bool check, string file, double prob);
     void edit();
@@ -16,6 +16,7 @@ class Grid{
     void checkFile(string file);
     void makePreset();
     void randFill(double prob);
+    void printGrid(string fileName);
     //presets
     void factory();
     void glider();
