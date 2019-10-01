@@ -4,19 +4,18 @@ using namespace std;
 class Grid{
   public:
     Grid(); //default constructor
-    Grid(int length);
     Grid(int horz, int vert); //overloaded constructor
     ~Grid(); //deconstructor
 
-    void scan(int mode, string fileName);
-    void output();
-    void play(bool check, string file, double prob);
-    void edit();
-    void copyTo();
-    void checkFile(string file);
-    void makePreset();
-    void randFill(double prob);
-    void printGrid(string fileName);
+    void scan(int mode, string fileName); //scan mainGrid and make scanGrid as next stage
+    void output(); //print the current state of mainGrid to console
+    void play(bool check, string file, double prob); //most the game functions
+    void edit(); //edit state of individual points
+    void copyTo();//copy every element of scanGrid onto mainGrid
+    void checkFile(string file); //read in a file name and scan it onto the mainGrid
+    void makePreset(); //allow for use of preset
+    void randFill(double prob); //fill grid according to probability
+    void printGrid(string fileName); //output grid to textfile fileName
     //presets
     void factory();
     void glider();

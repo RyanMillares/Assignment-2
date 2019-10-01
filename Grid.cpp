@@ -49,19 +49,20 @@ Grid::Grid(int vert, int horz){
 //deconstructor
 Grid::~Grid(){
   delete mainGrid;
-  delete scanGrid;
+  delete scanGrid;//delete both arrays
 }
 
 void Grid::scan(int mode, string fileName){
   int count;
   int same = 0;
   for(int i = 0; i < x_length; ++i){
-    for(int j = 0; j < y_length; ++j){
+    for(int j = 0; j < y_length; ++j){ //for every cell of 2d array
       count = 0;
       for(int m = -1; m < 2; ++m){
-        for(int n = -1; n < 2; ++n){
+        for(int n = -1; n < 2; ++n){ //for the square of 9 cells around it
           switch(mode){
             case 1: //classic
+            //as long as the neighbors exist, check their status
               if((((i+m) >= 0)&&((i+m) < x_length))&&(((j+n) >= 0)&&((j+n) < y_length))){
                 if(mainGrid[i + m][j + n]){
                   count++;
@@ -69,7 +70,7 @@ void Grid::scan(int mode, string fileName){
               }
             break;
             case 2: //doughnut
-            {
+            {//if x or y go below 0 or above max, roll to other side of array
               //https://stackoverflow.com/questions/23599708/how-do-i-resolve-this-error-jump-to-case-label-crosses-initialization/23599822
               int rollx = i + m;
               int rolly = j + n;
@@ -89,7 +90,7 @@ void Grid::scan(int mode, string fileName){
             }
             break;
             case 3: //mirror
-            {
+            {//if x or y goes below 0 or above max, set to 0 or max respectively
               int reflectx = i + m;
               int reflecty = j + n;
               if(reflectx < 0){
@@ -136,9 +137,9 @@ void Grid::scan(int mode, string fileName){
 
     }
   }
-  if(same == 0){
+  if(same == 0){ //if no changes occurm grid is stable and end simulation
     cout << "Grid has stabilized." << endl;
-    if(fileName != "blank"){
+    if(fileName != "blank"){//if confirmed, print output onto given file name
       printGrid(fileName);
     }
     exit(0);
@@ -148,7 +149,7 @@ void Grid::scan(int mode, string fileName){
 }
 
 
-void Grid::copyTo(){
+void Grid::copyTo(){ //copies all elements of scanGrid to mainGrid
   for(int i = 0; i < x_length; ++i){
     for(int j = 0; j < y_length; ++j){
       mainGrid[i][j] = scanGrid[i][j];
@@ -159,12 +160,12 @@ void Grid::copyTo(){
 void Grid::output(){
 
   for(int i = x_length - 1; i >= 0; --i){
-    //test
+
     cout << i << " ";
-    if(i < 10){
+    if(i < 10){ //y-axis
       cout << " ";
     }
-    //test
+
 
     for(int j = 0; j <= y_length - 1; ++j){
       if(mainGrid[i][j]){
@@ -208,7 +209,7 @@ void Grid::printGrid(string fileName){
 }
 
 void Grid::edit(){
-  int x,y;
+  int x,y; //allows user to manually edit points (turn on/off)
   cout << "Please provide the x and y coords of the cell." << endl;
   cout << "x: ";
   cin >> x;
@@ -234,7 +235,7 @@ void Grid::edit(){
 
   }
 }
-void Grid::makePreset(){
+void Grid::makePreset(){ //allows for a preset of points to be set active
   char d;
   cout << "Do you want to use a preset design? (y/n)" << endl;
   cin >> d;
@@ -307,7 +308,7 @@ void Grid::randFill(double prob){
   srand(time(0));
   for(int i = 0; i < x_length; ++i){
     for(int j = 0; j < y_length; ++j){
-      chance = ((double) rand()/(RAND_MAX));
+      chance = ((double) rand()/(RAND_MAX)); //creates probability
       if(chance < prob){
         mainGrid[i][j] = true;
       }
@@ -316,7 +317,7 @@ void Grid::randFill(double prob){
   output();
   cout << "Points filled randomly according to probability" << endl;
 }
-
+//take in a file name and create instream to read values from
 void Grid::checkFile(string file){
   string line;
   ifstream map(file);
@@ -331,7 +332,7 @@ void Grid::checkFile(string file){
       }
     }
     catch(...){
-      cout << "idiota" << endl;
+      cout << "task failed Successfully!" << endl;
     }
   }
   cout << "Successfully converted!" << endl;
@@ -362,7 +363,7 @@ void Grid::play(bool check, string file, double prob){
   if(tolower(c) == 'y'){
     while(true){ //edit loop
       edit();
-      output();
+      output(); //allow user to edit points
       cout << "Edit more points? (y/n)" << endl;
       cin >> c;
       if(tolower(c) != 'y'){
@@ -390,7 +391,7 @@ void Grid::play(bool check, string file, double prob){
   cout << "Simulation commencing.\nHit any key except q to continue through." << endl;
   cout << "Hit q at any time to end the simulation." << endl;
   while(c != 'q'){ //game loop temp
-    scan(mode, name);
+    scan(mode, name); //checks for mode and file name if applicable
     output();
     //sleep(10); for later
     if(pause){
@@ -420,7 +421,7 @@ void Grid::ship(){
   cout << "Points filled for ship" << endl;
 }
 //sample
-void Grid::factory(){
+void Grid::factory(){ //makes small gliders
   mainGrid[30][1] = true;
   mainGrid[31][1] = true;
   mainGrid[30][2] = true;
