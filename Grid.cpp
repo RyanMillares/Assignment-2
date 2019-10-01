@@ -118,21 +118,21 @@ void Grid::scan(int mode, string fileName){
       if(mainGrid[i][j]){
         count--; //exclude own cell count ONLY if alive
       }
-      if(count <= 1){
+      if(count <= 1){ //if one live neighbor, cell dies
 
         scanGrid[i][j] = false;
-      } else if(count == 2){
+      } else if(count == 2){ //if two live neighbors, cell is stable
 
         scanGrid[i][j] = mainGrid[i][j];
-      } else if(count == 3){
+      } else if(count == 3){ //if three live neighbor, cell is alive
 
         scanGrid[i][j] = true;
-      } else{
+      } else{ //if four or more live neighbor, cell dies.
 
         scanGrid[i][j] = false;
       }
       if(mainGrid[i][j] != scanGrid[i][j]){
-        same++;
+        same++; //increment for ever difference that occurs 
       }
 
     }
