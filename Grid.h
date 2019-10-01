@@ -23,13 +23,16 @@ class Grid{
 
 
   private:
-
-      bool **mainGrid;
-      bool **scanGrid;
+    //array of boolean values takes up less space because
+    //it is binary data type, so less memory leak
+      bool **mainGrid; //the main grid that is outputted
+      bool **scanGrid; //the grid that is formed from the main grid and
+                      //represents the next cycle in the simulation.
 
       int mode;
-      int x_length;
-      int y_length;
+      int x_length; //horizontal length of grid
+      int y_length; //vertical length of grids
+      //these values get switched somewhere along the way
 
 
 
