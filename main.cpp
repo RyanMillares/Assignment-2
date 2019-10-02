@@ -11,6 +11,7 @@ int main(int argc, char **argv){
   string confirm;
   string file = " ";
   double x, y;
+  bool check = true;
 
   cout << "Would you like to provide a map file? Enter 'y' if yes." << endl;
   cin >> confirm;
@@ -28,13 +29,14 @@ int main(int argc, char **argv){
       y = stoi(currentLine); //read in second line as height
       if((x < 1)&&(y < 1)){
         dim.close();
-        cout << "smh you can't have negative or zero as a grid dimension." << endl;
+        cout << "sorry you can't have negative or zero as a grid dimension." << endl;
         exit(0);
       }
       while(getline(dim, currentLine)){
         numLines++;
         cout << (currentLine.length() - 1) << endl;
         if((currentLine.length() - 1) != x){
+          //error handling for file grid length inconsistency
           cout << "one of your lines is not as long as you said it was..." << endl;
           cout << "fix your file then try again lol" << endl;
 
@@ -43,7 +45,7 @@ int main(int argc, char **argv){
         }
       }
       dim.close();
-      if(numLines != y){
+      if(numLines != y){ //error checking for file grid height
         cout << "your grid is not as tall as you said it was..." << endl;
         cout << "fix your file then try again lol" << endl;
         exit(0);
@@ -56,24 +58,77 @@ int main(int argc, char **argv){
     else{
       cout << "Thats not a file silly." << endl;
       cout << "Please provide the x and y dimensions." << endl;
-      cout << "x: ";
-      cin >> x;
-      cout << "y: ";
-      cin >> y;
+
+      while(check){
+        cout << "x: ";
+        cin >> x;
+        if(cin.fail()){
+          cout << "Please only put int value." << endl;
+          cin.clear();
+          cin.ignore(10000,'\n');
+        }
+        else{
+          check = false;
+        }
+      }
+      check = true;
+      while(check){
+        cout << "y: ";
+        cin >> y;
+        if(cin.fail()){
+          cout << "Please only put int value." << endl;
+          cin.clear();
+          cin.ignore(10000,'\n');
+        }
+        else{
+          check = false;
+        }
+      }
+      check = true;
+      if((x <= 0) || (y <= 0)){ //only positive numbers for grid dimensions
+        cout << "please, only put in positive numbers for dimensions" << endl;
+        exit(0);
+      }
     }
   }
     else{ //no want file
       cout << "Please provide the x and y dimensions." << endl;
-      cout << "x: ";
-      cin >> x;
-      cout << "y: ";
-      cin >> y;
+      while(check){
+        cout << "x: ";
+        cin >> x;
+        if(cin.fail()){
+          cout << "Please only put int value." << endl;
+          cin.clear();
+          cin.ignore(10000,'\n');
+        }
+        else{
+          check = false;
+        }
+      }
+      check = true;
+      while(check){
+        cout << "y: ";
+        cin >> y;
+        if(cin.fail()){
+          cout << "Please only put int value." << endl;
+          cin.clear();
+          cin.ignore(10000,'\n');
+        }
+        else{
+          check = false;
+        }
+      }
+      check = true;
+      if((x <= 0) || (y <= 0)){
+        cout << "please, only put in positive numbers for dimensions" << endl;
+        exit(0);
+      }
       Grid myGame(y, x); //first one is y, second is x
       cout << "Would you like to manually add points or have a random configuration?" << endl;
       cout << "'r' - random; 'm' - manual input" << endl;
       cin >> confirm;
       if(confirm == "r"){
-        cout << "Proive a decimal probability for a cell to be alive." << endl;
+        cout << "Provide a decimal probability for a cell to be alive." << endl;
         cin >> x;
         if(x > 1){
           x = 1;

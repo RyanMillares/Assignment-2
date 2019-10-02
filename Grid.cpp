@@ -132,7 +132,7 @@ void Grid::scan(int mode, string fileName){
         scanGrid[i][j] = false;
       }
       if(mainGrid[i][j] != scanGrid[i][j]){
-        same++; //increment for ever difference that occurs 
+        same++; //increment for ever difference that occurs
       }
 
     }
@@ -145,9 +145,7 @@ void Grid::scan(int mode, string fileName){
     exit(0);
   }
   copyTo();
-
 }
-
 
 void Grid::copyTo(){ //copies all elements of scanGrid to mainGrid
   for(int i = 0; i < x_length; ++i){
@@ -162,31 +160,31 @@ void Grid::output(){
   for(int i = x_length - 1; i >= 0; --i){
 
     cout << i << " ";
-    if(i < 10){ //y-axis
+    if(i < 10){ //y-axis numbers
       cout << " ";
     }
 
 
     for(int j = 0; j <= y_length - 1; ++j){
       if(mainGrid[i][j]){
-        cout << "X";
+        cout << "X"; //if element is true, print "X"
       }
-      else{
+      else{ //if false, print "-"
         cout << "-";
       }
-      cout << "  ";
+      cout << "  "; //print spaces in between to make cells more square
     }
     cout << endl;
   }
   cout << endl;
 }
 
-void Grid::printGrid(string fileName){
+void Grid::printGrid(string fileName){ //print grid onto output file
   ofstream file;
   file.open(fileName);
-
+  file << "Final state of grid: " << endl;
   for(int i = x_length - 1; i >= 0; --i){
-    //test
+    //this whole this is basically output();, but for file
     file << i << " ";
     if(i < 10){
       file << " ";
@@ -209,20 +207,45 @@ void Grid::printGrid(string fileName){
 }
 
 void Grid::edit(){
+  bool check = true;
   int x,y; //allows user to manually edit points (turn on/off)
   cout << "Please provide the x and y coords of the cell." << endl;
-  cout << "x: ";
-  cin >> x;
-  if(x >= y_length){
+
+  while(check){
+    cout << "x: ";
+    cin >> x;
+    if(cin.fail()){
+      cout << "Please only put int value." << endl;
+      cin.clear();
+      cin.ignore(10000,'\n');
+    }
+    else{
+      check = false;
+    }
+  }
+  check = true;
+
+  if(x >= y_length){ //bound input to between 0 and highest index
     x = y_length - 1;
   } else if(x < 0){
     x = 0;
   }
 
-  cout << "y: ";
-  cin >> y;
+  while(check){
+    cout << "y: ";
+    cin >> y;
+    if(cin.fail()){
+      cout << "Please only put int value." << endl;
+      cin.clear();
+      cin.ignore(10000,'\n');
+    }
+    else{
+      check = false;
+    }
+  }
+  check = true;
   if(y >= x_length){
-    y = x_length - 1;
+    y = x_length - 1;//bound input to between 0 and highest index
   } else if(x < 0){
     x = 0;
   }
@@ -237,6 +260,7 @@ void Grid::edit(){
 }
 void Grid::makePreset(){ //allows for a preset of points to be set active
   char d;
+  bool check = true;
   cout << "Do you want to use a preset design? (y/n)" << endl;
   cin >> d;
   if(tolower(d) == 'y'){
@@ -253,15 +277,24 @@ void Grid::makePreset(){ //allows for a preset of points to be set active
       cout << "3 - 'factory' : large structure that shoots gliders down left" << endl;
       cout << "Required: at least a 40x40 grid of any mode." << endl;
 
-      try{
+      while(check){
+        cout << "Preset number: ";
         cin >> input;
+        if(cin.fail()){
+          cout << "Please only put int value." << endl;
+          cin.clear();
+          cin.ignore(10000,'\n');
+        }
+        else{
+          check = false;
+        }
+      }
+      check = true;
 
-        confirm = false;
-      }
-      catch(...){
-        cout << "Please only put one character, not a string." << endl;
-        confirm = true;
-      }
+
+      confirm = false;
+
+
     } while(confirm);
 
     switch(input){
@@ -343,6 +376,7 @@ void Grid::play(bool check, string file, double prob){
   bool pause, print;
   string name = "blank";
   char c;
+  bool check1 = true;
   int x,y;
   if(check){
     checkFile(file);
@@ -350,9 +384,21 @@ void Grid::play(bool check, string file, double prob){
   cout << "Welcome to Life! Please select a mode." << endl;
   cout << "Put 1 for Classic, 2 for Doughnut, 3 for Mirror" << endl;
   cout << "Any invalid choice will default to Classic mode." << endl;
-  cin >> mode;
-  //mode = 1; //test
 
+  //mode = 1; //test
+  while(check1){
+    cout << "Mode number: ";
+    cin >> mode;
+    if(cin.fail()){
+      cout << "Please only put int value." << endl;
+      cin.clear();
+      cin.ignore(10000,'\n');
+    }
+    else{
+      check1 = false;
+    }
+  }
+  check1 = true;
   makePreset();
   if(prob != 0){
     randFill(prob);
@@ -374,11 +420,11 @@ void Grid::play(bool check, string file, double prob){
   }
   cout << "Would you like to hit a key to go through each cycle manually? (y)" << endl;
   cout << "Otherwise the simulation will automatically run until grid stabilizes or infinitely." <<  endl;
-  cin >> c;
-  pause = (c == 'y');
+  cin >> name;
+  pause = (name == "y");
   cout << "If and when grid stabilizes, print grid onto output file? (y)" << endl;
-  cin >> c;
-  print = (c == 'y');
+  cin >> name;
+  print = (name == "y");
   if(print){
 
 
@@ -393,11 +439,10 @@ void Grid::play(bool check, string file, double prob){
   while(c != 'q'){ //game loop temp
     scan(mode, name); //checks for mode and file name if applicable
     output();
-    //sleep(10); for later
     if(pause){
       cin >> c; //put conditional here later
-
     }
+//    sleep_for(milliseconds(10));
   }
 }
 
